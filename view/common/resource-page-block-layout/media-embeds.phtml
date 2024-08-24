@@ -1,0 +1,10 @@
+<?php
+$resourceMedia = $resource->media();
+?>
+<?php if ($resourceMedia): ?>
+<div class="media-embeds">
+    <?php foreach ($resourceMedia as $media): ?>
+    <?php if($media->mediaType()!="audio/flac")echo $media->render(); ?>
+    <?php endforeach; ?>
+</div>
+<?php endif; ?>

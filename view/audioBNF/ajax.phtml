@@ -1,0 +1,62 @@
+<?php
+error_reporting(E_ERROR | E_PARSE);
+$helper = $this->params()->fromQuery('helper','');
+$vtt = $this->params()->fromQuery('vtt','');
+$log = $this->logger();
+$rs=null;
+$user = $this->identity();
+
+switch ($helper) {
+    case 'JDC':
+        $rs = $this->JDCFactory(['user'=>$user,'params'=>$this->params()->fromQuery(),'view'=>$this]);
+        echo json_encode($rs);                
+        break;
+    case 'CartoHexa':
+            $rs = $this->CartoHexaFactory(['user'=>$user,'query'=>$this->params()->fromQuery(),'view'=>$this]);
+            echo $this->json($rs);                
+            break;
+    case 'JDCsql':
+        $rs = $this->JDCSqlFactory($this->params()->fromQuery());
+        echo $this->json($rs);                
+        break;
+    case 'SQL':
+        $rs = $this->QuerySqlFactory($this->params()->fromQuery());
+        echo $this->json($rs);                
+        break;
+    case 'ReseauConcept':
+        $item = $this->getItem("concept");
+        $rt =  $this->api()->read('resource_templates', ['label' => 'Rapports entre concepts'])->getContent();
+        $rc = $this->ReseauConcept($item, null, $rt);
+        echo $this->json($rc);                
+        break;
+    case 'ResourceNetworks':
+        $item = $this->getItem("concept");
+        $RNF = $this->ResourceNetworksFactory($item);
+        echo $this->json($RNF);                
+        break;
+    case 'items':
+        $rs=[];
+        foreach ($this->params()->fromQuery('ids') as $id) {
+            $rs[]=$this->api()->read('items', $id)->getContent();
+        }
+        echo $this->json($rs);                
+        break;
+    case "Query":
+        $rs=$this->querySql($this->params()->fromQuery());
+        echo json_encode($rs);
+        break;
+    case 'sql':
+        $rs = $this->chaoticumSeminarioSql($this->params()->fromQuery());
+        echo $this->json($rs);                
+        break;
+    case 'chaoticumSeminario':
+        $rs = $this->chaoticumSeminario($this->params()->fromQuery());
+        echo $this->json($rs);                
+        break;        
+}
+
+
+?>
+
+
+
