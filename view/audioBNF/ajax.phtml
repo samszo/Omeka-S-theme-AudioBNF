@@ -46,12 +46,20 @@ switch ($helper) {
         echo json_encode($rs);
         break;
     case 'sql':
-        $rs = $this->chaoticumSeminarioSql($this->params()->fromQuery());
-        echo $this->json($rs);                
+        $params = $this->params()->fromQuery();
+        $rs = $this->chaoticumSeminarioSql($params);
+        if($params['format']=='text'){
+            foreach ($rs as $r) {
+                echo $r['txt'];
+            }
+        }else echo $this->json($rs);                
         break;
     case 'chaoticumSeminario':
         $rs = $this->chaoticumSeminario($this->params()->fromQuery());
         echo $this->json($rs);                
+        break;        
+    case 'anythingLLMlogin':
+        echo $this->json($this->anythingLLMCredentials($this->params()->fromQuery()));
         break;        
 }
 
